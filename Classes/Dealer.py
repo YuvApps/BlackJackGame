@@ -8,9 +8,9 @@ class Dealer:
         self.busted = False
         self.stopped = False
 
-    def show_hand(self):
+    def show_hand(self, tab_counter):
         for card in self.cards:
-            card.show()
+            card.show(tab_counter)
 
     def expose_hand(self):
         for card in self.cards:

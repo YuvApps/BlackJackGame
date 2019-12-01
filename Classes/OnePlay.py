@@ -31,8 +31,10 @@ class OnePlay:
                     hand_index += 1
                     if len(hand.cards) == 0:
                         bet = int(input(f"{player.name}, please place your bet: "))
-
-                        hand.bet = player.init_bet
+                        while not self.check_bet(player, bet):
+                            print(f"Sorry {player.name}, your bet is illegal")
+                            bet = int(input(f"{player.name}, please place your bet: "))
+                        hand.bet = bet
                         player.balance -= hand.bet
                     hand.cards.append(self.deck.draw_card())
 
@@ -48,8 +50,8 @@ class OnePlay:
             hand_index = -1
             for hand in player.hands:
                 hand_index += 1
-                while not (player.hands[hand_index].indexes.lose
-                           or player.hands[hand_index].indexes.finish):
+                while not (hand.indexes.lose
+                           or hand.indexes.finish):
                     print(f"{player.name}'s Turn: ")
                     self.make_player_move(player, player.play(hand_index), hand_index)
                     self.check_player(player, hand_index)
@@ -63,6 +65,11 @@ class OnePlay:
             print('\n' * 80)
             print(f"The Table's Status now is: ")
             self.show()
+
+    def check_bet(self, player_index, bet):
+        if bet == 0 or bet > self.players[player_index].balance:
+            return False
+        return True
 
     def make_player_move(self, player, player_action, hand_index):
         if player_action == Consts.ACTION_DRAW:
@@ -143,28 +150,33 @@ class OnePlay:
     def show(self):
         for player in self.players:
             hand_index = -1
+            print(f"{player.name}'s status is:")
             for hand in player.hands:
                 hand_index += 1
                 if not hand:
-                    print(f"{player.name} has no cards yet..")
+                    print(f"\t{player.name} has no cards yet..")
                 else:
                     if len(player.hands) > 1:
-                        print(f"The {hand_index}'s hand of {player.name} is:")
+                        print(f"\tThe {hand_index}'s hand of {player.name} is:")
                     else:
-                        print(f"{player.name}'s hand is: ")
-                    player.show_hand(hand_index)
-                    print(f"{player.name}'s hand sum is: {player.calc_hand(hand_index)}")
-                print(f"{player.name}'s bet for this round is: {hand.bet}")
+                        print(f"\t{player.name}'s hand is: ")
+                    player.show_hand(hand_index, 2)
+                    print()
+                    print(f"\t{player.name}'s hand sum is: {player.calc_hand(hand_index)}")
+                print(f"\t{player.name}'s bet for this round is: {hand.bet}")
                 for msg in hand.messages:
-                    print(msg)
-            print(f"{player.name}'s current balance is: {player.balance}")
+                    print("\t" + msg)
+            print(f"\t{player.name}'s current balance is: {player.balance}")
+            print()
 
+        print(f"The dealer's status is:")
         if not self.dealer.cards:
-            print("The dealer has no cards yet..")
+            print("\tThe dealer has no cards yet..")
         else:
-            print(f"The dealer has the cards: ")
-            self.dealer.show_hand()
+            print(f"\tThe dealer has the cards: ")
+            self.dealer.show_hand(1)
+            print()
         if self.dealer.cards[0].status == Consts.EXPOSED:
-            print(f"The dealer's hand sum is: {self.dealer.calc_hand()}")
+            print(f"\tThe dealer's hand sum is: {self.dealer.calc_hand()}")
         for msg in self.dealer.messages:
             print(msg)

@@ -8,8 +8,8 @@ class Card:
         self.value = value
         self.status = status
 
-    def show(self):
+    def show(self, tab_counter=1):
         if self.status == Consts.HIDDEN:
-            print("Hidden")
+            print(tab_counter*4*' ' + "Hidden")
         else:
-            print(f"{self.name} of {self.suit}")
+            print(tab_counter*4*' ' + f"{self.name} of {self.suit}")
