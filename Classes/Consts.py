@@ -1,0 +1,14 @@
+class Consts:
+    BLACKJACK = 21
+
+    HIDDEN = 0
+    EXPOSED = 1
+
+    ACTION_DRAW = 1
+    ACTION_STAY = 2
+    ACTION_DOUBLE_DOWN = 3
+    ACTION_SPLIT = 4
+    ACTION_SURRENDER = 5
+    ACTION_INSURANCE = 6
+
+    DEALER_STOPPER = 17
